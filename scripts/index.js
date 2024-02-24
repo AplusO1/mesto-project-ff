@@ -1,24 +1,40 @@
 const cardTemplate = document.querySelector("#card-template").content;
 const placesList = document.querySelector(".places__list");
-const addButton = document.querySelector(".profile__add-button");
 
-function createCard(cardData) {
-  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
-  cardElement.querySelector(".card__image").src = cardData.link;
-  cardElement.querySelector(".card__title").textContent = cardData.name;
+function createCard(item) {
+  const cardElement = getCard(item, { deleteCard });
   placesList.append(cardElement);
 }
 
-initialCards.forEach(function(cardData) {
-  createCard(cardData);
-});
-
-placesList.addEventListener("click", (event) => {
-if (event.target.classList.contains("card__delete-button")) {
-  const card = event.target.closest(".places__item");
-  card.remove();
+function deleteCard(cardElement) {
+  cardElement.remove();
 }
-});
+
+initialCards.forEach(function(cardData) { 
+  createCard(cardData); 
+}); 
+
+function getCard(item, { deleteCard, likeCard, handleImageClick }) {
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardTitle = cardElement.querySelector(".card__title");
+  const deleteButton = cardElement.querySelector(".card__delete-button");
+
+  const { link, name } = item;
+
+  cardImage.src = link;
+  cardImage.alt = name;
+  cardTitle.textContent = name;
+
+  deleteButton.addEventListener("click", () => {
+    deleteCard(cardElement);
+  });
+
+  return cardElement;
+}
+
+
+
 
 // если нужно добавлять карточки по 1
 // let currentCardIndex = 0;
