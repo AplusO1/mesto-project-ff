@@ -1,24 +1,40 @@
 import "./pages/index.css";
 import { initialCards } from "./components/cards";
 import { openPopup, closePopup } from "./components/modal";
-import { createCard } from "./components/card";
+import { createCard, deleteCard, likeCard } from "./components/card";
+
 const profileTitle = document.querySelector(".profile__title");
 const buttonEditProfile = document.querySelector(".profile__edit-button");
 const popupEditProfile = document.querySelector(".popup_type_edit");
 const profileDescription = document.querySelector(".profile__description");
 const buttonAddNewCard = document.querySelector(".profile__add-button");
-const buttonsClosePopup = document.querySelectorAll(".popup__close");
 const popups = document.querySelectorAll(".popup");
 const formElementAddCard = document.forms["new-place"];
-const formElement = document.forms["edit-profile"];
-const nameInput = formElement.querySelector(".popup__input_type_name");
-const jobInput = formElement.querySelector(".popup__input_type_description");
+const profileForm = document.forms["edit-profile"];
 const popupAddNewCard = document.querySelector(".popup_type_new-card");
+const placesList = document.querySelector(".places__list");
+const popupImage = document.querySelector(".popup_type_image");
+const nameInput = profileForm.querySelector(".popup__input_type_name");
+const jobInput = profileForm.querySelector(".popup__input_type_description");
+const addCardNameInput = formElementAddCard.querySelector(".popup__input_type_card-name");
+const addCardUrlInput = formElementAddCard.querySelector(".popup__input_type_url");
+const imgInPopup = popupImage.querySelector(".popup__image");
+const popupCaption = popupImage.querySelector(".popup__caption");
 
+function handleImageClick(dataCard) {
+  imgInPopup.src = dataCard.link;
+  imgInPopup.alt = dataCard.name;
+  popupCaption.textContent = dataCard.name;
+  openPopup(popupImage);
+}
 
+function renderCard(item, method = "prepend") {
+  const cardElement = createCard(item, deleteCard, likeCard, handleImageClick);
+  placesList[method](cardElement);
+}
 
 initialCards.forEach(function (cardData) {
-  createCard(cardData);
+  renderCard(cardData);
 });
 
 buttonEditProfile.addEventListener("click", function () {
@@ -27,20 +43,18 @@ buttonEditProfile.addEventListener("click", function () {
   openPopup(popupEditProfile);
 });
 
-buttonsClosePopup.forEach((buttonClosePopup) => {
-  const popup = buttonClosePopup.closest(".popup");
-  buttonClosePopup.addEventListener("click", () => closePopup(popup));
-});
-
 popups.forEach((popup) => {
-  popup.addEventListener("click", function (evt) {
-    if (evt.target === evt.currentTarget) {
-      closePopup(evt.target);
-    }
+  popup.addEventListener('mousedown', (evt) => {
+      if (evt.target.classList.contains('popup_opened') || evt.target === popup) {
+          closePopup(popup);
+      }
+      if (evt.target.classList.contains('popup__close')) {
+          closePopup(popup);
+      }
   });
 });
 
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   const newName = nameInput.value;
@@ -52,26 +66,30 @@ function handleFormSubmit(evt) {
   closePopup(popupEditProfile);
 }
 
-formElement.addEventListener("submit", handleFormSubmit);
+profileForm.addEventListener("submit", handleProfileFormSubmit);
 
 buttonAddNewCard.addEventListener("click", function () {
-  formElementAddCard.reset();
   openPopup(popupAddNewCard);
 });
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
-
-  const placeName = formElementAddCard.querySelector(".popup__input_type_card-name").value;
-  const imageUrl = formElementAddCard.querySelector(".popup__input_type_url").value;
+  const placeName = addCardNameInput.value;
+  const imageUrl = addCardUrlInput.value;
 
   const newCardData = {
     name: placeName,
     link: imageUrl,
   };
 
-  createCard(newCardData);
-
+  const cardElement = createCard(
+    newCardData,
+    deleteCard,
+    likeCard,
+    handleImageClick
+  );
+  placesList.prepend(cardElement);
+  formElementAddCard.reset();
   closePopup(popupAddNewCard);
 }
 
