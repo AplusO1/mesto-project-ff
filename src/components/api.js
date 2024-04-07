@@ -19,9 +19,6 @@ export const getUserData = () => {
       return Promise.reject(`Что-то пошло не так: ${res.status}`);
     }
   })
-  .catch(error => {
-    return Promise.reject(`Ошибка при получении данных пользователя: ${error}`);
-  });
 };
 
 // получение карточек
@@ -36,9 +33,6 @@ export const getInitialCards = () => {
       return Promise.reject(`Что-то пошло не так: ${res.status}`);
     }
   })
-  .catch(error => {
-    return Promise.reject(`Ошибка при загрузке карточек: ${error}`);
-  });
 };
 
 export function updateUserProfile(name, about) {
@@ -64,9 +58,6 @@ export function updateUserProfile(name, about) {
     console.log('Данные пользователя успешно обновлены:', userData);
     return userData;
   })
-  .catch((error) => {
-    return Promise.reject(`Ошибка при обновлении данных пользователя: ${error}`);
-  });
 }
 
 export function addNewCard(name, link) {
@@ -92,10 +83,6 @@ export function addNewCard(name, link) {
     console.log('Новая карточка успешно добавлена:', newCard);
     return newCard;
   })
-  .catch((error) => {
-    console.error('Ошибка при добавлении новой карточки:', error);
-    return Promise.reject(error);
-  });
 }
 
 export function deleteCard(cardElement) {
@@ -120,10 +107,6 @@ export function deleteCard(cardElement) {
     console.log('Карточка успешно удалена:', data);
     return data;
   })
-  .catch((error) => {
-    console.error('Ошибка при удалении карточки:', error);
-    return Promise.reject(error);
-  });
 }
 
 export function addLikeCard(id, isLiked) {
@@ -139,9 +122,6 @@ export function addLikeCard(id, isLiked) {
       return Promise.reject(`Ошибка: ${res.status}`);
     }
   })
-  .catch(error => {
-    return Promise.reject(`Ошибка при добавлении лайка: ${error}`);
-  });
 }
 
 export const updateAvatar = (data) => {
@@ -157,9 +137,6 @@ export const updateAvatar = (data) => {
       return Promise.reject(`Ошибка: ${res.status}`);
     }
   })
-  .catch(error => {
-    return Promise.reject(`Ошибка при обновлении аватара: ${error}`);
-  });
 };
 
 

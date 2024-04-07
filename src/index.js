@@ -19,7 +19,7 @@ const placesList = document.querySelector(".places__list");
 const popupImage = document.querySelector(".popup_type_image");
 const nameInput = profileForm.querySelector(".popup__input_type_name");
 const jobInput = profileForm.querySelector(".popup__input_type_description");
-const addCardNameInput = formElementAddCard.querySelector(
+const inputNamePopupCard = formElementAddCard.querySelector(
   ".popup__input_type_card-name"
 );
 const addCardUrlInput = formElementAddCard.querySelector(
@@ -105,7 +105,7 @@ buttonAddNewCard.addEventListener("click", function () {
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
   renderLoading(true, evt.submitter); // Начало процесса сохранения
-  const newName = addCardNameInput.value;
+  const newName = inputNamePopupCard.value;
   const newLink = addCardUrlInput.value;
 
   // Добавление новой карточки на сервер
