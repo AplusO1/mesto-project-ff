@@ -14,10 +14,7 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div
-        class="profile__image"
-        style="background-image: url(<%=require('./images/avatar.jpg')%>)">
-      </div>
+      <div class="profile__image"></div>
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -39,9 +36,11 @@
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
-      <form class="popup__form" name="edit-profile">
-        <input type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required>
-        <input type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required>
+      <form class="popup__form" name="edit-profile" novalidate>
+        <input id="name-input" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="40" pattern="^[a-zA-Zа-яА-ЯёЁ\s\-]+$">
+        <span class="name-input-error popup__input_error"></span>
+        <input id="description-input" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required minlength="2" maxlength="40">
+        <span class="description-input-error popup__input_error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -50,9 +49,11 @@
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
-      <form class="popup__form" name="new-place">
-        <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required>
-        <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+      <form class="popup__form" name="new-place" novalidate>
+        <input type="text" id="placeInputCard" pattern="^[a-zA-Zа-яА-ЯёЁ\s\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" minlength="2" maxlength="30" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required>
+        <span class="placeInputCard-error popup__input_error"></span>
+        <input type="url" id="placeInputUrl" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+        <span class="placeInputUrl-error popup__input_error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -61,8 +62,19 @@
     <div class="popup__content popup__content_content_image">
       <button type="button" class="popup__close"></button>
       <img src="" alt="" class="popup__image">
-      <p class="popup__caption"></p>
+      <p class="popup__caption">0</p>
     </div>
+  </div>
+</div>
+<div class="popup popup_type-avatar popup_is-animated">
+  <div class="popup__content">
+    <button class="popup__close" type="button"></button>
+    <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form" name="avatar-form">
+      <input type="url" name="avatar" id="place-url-input" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required/>
+      <span class="place-url-input-error popup__input_error"></span>
+      <button type="submit" class="button popup__button">Сохранить</button>
+    </form>
   </div>
 </div>
 
@@ -73,7 +85,10 @@
     <div class="card__description">
       <h2 class="card__title">
       </h2>
-      <button type="button" class="card__like-button"></button>
+      <div class="like-element">
+        <button type="button" class="card__like-button"></button>
+        <span class="like-button__count">0</span>
+      </div>
     </div>
   </li>
 </template>
