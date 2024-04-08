@@ -6,19 +6,22 @@ const config = {
   },
 };
 
+// проверка ответа
+function checkResponse(res) {
+  if (res.ok) {
+    return res.json();
+  } else {
+    return Promise.reject(`Что-то пошло не так: ${res.status}`);
+  }
+}
+
 
 // получение данных о пользователе
 export const getUserData = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Что-то пошло не так: ${res.status}`);
-    }
-  })
+  .then(checkResponse)
 };
 
 // получение карточек
@@ -26,13 +29,7 @@ export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Что-то пошло не так: ${res.status}`);
-    }
-  })
+  .then(checkResponse)
 };
 
 export function updateUserProfile(name, about) {
@@ -47,17 +44,7 @@ export function updateUserProfile(name, about) {
       about: about
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
-  .then((userData) => {
-    console.log('Данные пользователя успешно обновлены:', userData);
-    return userData;
-  })
+  .then(checkResponse)
 }
 
 export function addNewCard(name, link) {
@@ -72,41 +59,16 @@ export function addNewCard(name, link) {
       link: link
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(new Error(`Ошибка: ${res.status}`));
-    }
-  })
-  .then((newCard) => {
-    console.log('Новая карточка успешно добавлена:', newCard);
-    return newCard;
-  })
+  .then(checkResponse)
 }
 
-export function deleteCard(cardElement) {
-  const cardId = cardElement.dataset.id;
-
-  // Удаление карточки из DOM
-  cardElement.remove();
-
-  // Затем обновление состояния карточки на сервере
-  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+export function removeCard(id) {
+  // обновление состояния карточки на сервере
+  return fetch(`${config.baseUrl}/cards/${id}`, {
     method: 'DELETE',
     headers: config.headers
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(new Error(`Ошибка: ${res.status}`));
-    }
-  })
-  .then((data) => {
-    console.log('Карточка успешно удалена:', data);
-    return data;
-  })
+  .then(checkResponse)
 }
 
 export function addLikeCard(id, isLiked) {
@@ -115,13 +77,7 @@ export function addLikeCard(id, isLiked) {
     method: method,
     headers: config.headers,
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
+  .then(checkResponse)
 }
 
 export const updateAvatar = (data) => {
@@ -130,13 +86,7 @@ export const updateAvatar = (data) => {
     headers: config.headers,
     body: JSON.stringify(data),
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
+  .then(checkResponse)
 };
 
 

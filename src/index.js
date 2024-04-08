@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import { openPopup, closePopup } from "./components/modal";
-import { createCard, likeCard } from "./components/card";
-import { getUserData, getInitialCards, updateUserProfile, addNewCard, deleteCard, updateAvatar } from "./components/api";
+import { createCard, likeCard, deleteCard } from "./components/card";
+import { getUserData, getInitialCards, updateUserProfile, addNewCard, updateAvatar } from "./components/api";
 import { validationSettings, enableValidation, clearValidation } from "./components/validation";
 
 const profileTitle = document.querySelector(".profile__title");
@@ -43,12 +43,9 @@ export function renderCard(item, method = "append") {
   placesList[method](cardElement);
 }
 
-function renderLoading(isLoading, button) {
-  if (isLoading) {
-    button.textContent = "Сохранение..."
-  } else {
-    button.textContent = "Сохранить"
-  }
+// рендер
+function renderLoading(saveButton, status) {
+  saveButton.textContent = status;
 }
 
 buttonEditProfile.addEventListener("click", function () {
@@ -71,7 +68,7 @@ popups.forEach((popup) => {
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
-  renderLoading(true, evt.submitter); // Начало процесса сохранения
+  renderLoading(evt.submitter, "Сохранение...");
   const newName = nameInput.value;
   const newAbout = jobInput.value;
 
@@ -85,9 +82,7 @@ function handleProfileFormSubmit(evt) {
     .catch((err) => {
       console.log(err);
     })
-    .finally(() => {
-      renderLoading(false, evt.submitter); // Завершение процесса сохранения
-    });
+    .finally(() => renderLoading(evt.submitter, "Сохранить"));
 }
 
 // Добавление слушателя на отправку формы редактирования профиля
@@ -98,13 +93,15 @@ profileForm.addEventListener("input", (evt) => {
 });
 
 buttonAddNewCard.addEventListener("click", function () {
+  formElementAddCard.elements["place-name"].value = "";
+  formElementAddCard.elements["link"].value = "";
   openPopup(popupAddNewCard);
   clearValidation(popupAddNewCard, validationSettings);
 });
 
 function handleAddCardFormSubmit(evt) {
   evt.preventDefault();
-  renderLoading(true, evt.submitter); // Начало процесса сохранения
+  renderLoading(evt.submitter, "Сохранение...");
   const newName = inputNamePopupCard.value;
   const newLink = addCardUrlInput.value;
 
@@ -118,9 +115,7 @@ function handleAddCardFormSubmit(evt) {
     .catch((err) => {
       console.log(err);
     })
-    .finally(() => {
-      renderLoading(false, evt.submitter); // Завершение процесса сохранения
-    });
+    .finally(() => renderLoading(evt.submitter, "Сохранить"));
 }
 
 formElementAddCard.addEventListener("submit", handleAddCardFormSubmit);
@@ -131,7 +126,7 @@ enableValidation(validationSettings);
 
 function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
-  renderLoading(true, evt.submitter); // Начало процесса сохранения
+  renderLoading(evt.submitter, "Сохранение...");
   updateAvatar({ avatar: avatarInput.value })
     .then((data) => {
       profileAvatar.style = `background-image: url(${data.avatar})`;
@@ -142,14 +137,13 @@ function handleAvatarFormSubmit(evt) {
     .catch((err) => {
       console.log(err);
     })
-    .finally(() => {
-      renderLoading(false, evt.submitter); // Завершение процесса сохранения
-    });
+    .finally(() => renderLoading(evt.submitter, "Сохранить"));
 }
 
 avatarFormElement.addEventListener("submit", handleAvatarFormSubmit);
 
 profileAvatar.addEventListener("click", () => {
+  avatarInput.value = " ";
   clearValidation(avatarPopup, validationSettings);
   openPopup(avatarPopup)
 })

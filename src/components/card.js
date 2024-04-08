@@ -1,4 +1,4 @@
-import { addLikeCard } from "./api";
+import { addLikeCard, removeCard } from "./api";
 
 export function createCard(item, deleteCard, likeCard, handleImageClick, userId) {
   const cardTemplate = document.querySelector("#card-template").content;
@@ -72,4 +72,12 @@ export function likeCard(likeButton, cardNode) {
   }
 }
 
-
+// Функция удаления карточки
+export function deleteCard(cardElement) {
+  removeCard(cardElement.dataset.id)
+  .then(() => {
+    cardElement.remove();
+    console.log("Карточка успешно удалена");
+  })
+    .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
+}
