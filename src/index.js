@@ -29,6 +29,8 @@ const imgInPopup = popupImage.querySelector(".popup__image");
 const popupCaption = popupImage.querySelector(".popup__caption");
 const avatarFormElement = avatarPopup.querySelector(".popup__form");
 const avatarInput = avatarFormElement.querySelector(".popup__input_type_url");
+const popupUrlError = formElementAddCard.querySelector(".placeInputUrl-error");
+
 
 
 function handleImageClick(dataCard) {
@@ -105,19 +107,34 @@ function handleAddCardFormSubmit(evt) {
   const newName = inputNamePopupCard.value;
   const newLink = addCardUrlInput.value;
 
-  // Добавление новой карточки на сервер
-  addNewCard(newName, newLink)
-    .then((newCard) => {
-      renderCard(newCard, "prepend");
-      formElementAddCard.reset();
-      closePopup(popupAddNewCard);
-      console.log('Карточка успешно добавлена на сервер')
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => renderLoading(evt.submitter, "Сохранить"));
+  // Создание временного изображения для проверки ссылки
+  const tempImg = new Image();
+  tempImg.onload = function() {
+    // Если изображение успешно загружено, добавляем карточку на сервер
+    addNewCard(newName, newLink)
+      .then((newCard) => {
+        renderCard(newCard, "prepend");
+        formElementAddCard.reset();
+        closePopup(popupAddNewCard);
+        console.log('Карточка успешно добавлена на сервер');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => renderLoading(evt.submitter, "Сохранить"));
+  };
+  tempImg.onerror = function() {
+    // Если загрузка изображения не удалась, выводим сообщение об ошибке
+    popupUrlError.textContent = 'Ошибка: изображение по ссылке не найдено или недоступно';
+    popupUrlError.classList.add(validationSettings.errorClass);
+    addCardUrlInput.classList.add(validationSettings.inputErrorClass);
+    // Здесь можно добавить логику для вывода сообщения пользователю
+    renderLoading(evt.submitter, "Сохранить");
+  };
+  // Устанавливаем источник изображения для проверки ссылки
+  tempImg.src = newLink;
 }
+
 
 formElementAddCard.addEventListener("submit", handleAddCardFormSubmit);
 
