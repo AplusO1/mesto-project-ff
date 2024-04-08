@@ -1,12 +1,23 @@
 import { addLikeCard, removeCard } from "./api";
+import { openPopup, closePopup } from "./modal";
 
-export function createCard(item, deleteCard, likeCard, handleImageClick, userId) {
+export function createCard(
+  item,
+  deleteCard,
+  likeCard,
+  handleImageClick,
+  userId
+) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
+  const popupAreYouSure = document.querySelector(".popup_are-you-sure");
+  const cardDeleteButton = popupAreYouSure.querySelector(
+    ".popup__button_delete"
+  );
 
   cardImage.src = item.link;
   cardImage.alt = item.name;
@@ -17,20 +28,24 @@ export function createCard(item, deleteCard, likeCard, handleImageClick, userId)
   if (item.owner._id !== userId) {
     deleteButton.classList.add("card__delete-button-hidden");
   }
-  
+
   const likeCount = item.likes.length || 0;
   const likeCountNode = cardElement.querySelector(".like-button__count");
   likeCountNode.textContent = likeCount;
 
-  const hasLikes = item.likes.some(like => like._id === userId);
+  const hasLikes = item.likes.some((like) => like._id === userId);
 
   // Если есть хотя бы один лайк от текущего пользователя, применяем класс к кнопке лайка
   if (hasLikes) {
-    likeButton.classList.add('card__like-button_is-active');
+    likeButton.classList.add("card__like-button_is-active");
   }
 
   deleteButton.addEventListener("click", () => {
-    deleteCard(cardElement);
+    openPopup(popupAreYouSure);
+    cardDeleteButton.addEventListener("click", () => {
+      deleteCard(cardElement)
+      closePopup(popupAreYouSure)
+    })
   });
 
   likeButton.addEventListener("click", () => {
@@ -38,7 +53,7 @@ export function createCard(item, deleteCard, likeCard, handleImageClick, userId)
   });
 
   cardImage.addEventListener("click", () => {
-    handleImageClick(item); 
+    handleImageClick(item);
   });
 
   return cardElement;
@@ -75,9 +90,9 @@ export function likeCard(likeButton, cardNode) {
 // Функция удаления карточки
 export function deleteCard(cardElement) {
   removeCard(cardElement.dataset.id)
-  .then(() => {
-    cardElement.remove();
-    console.log("Карточка успешно удалена");
-  })
+    .then(() => {
+      cardElement.remove();
+      console.log("Карточка успешно удалена");
+    })
     .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
 }

@@ -111,6 +111,7 @@ function handleAddCardFormSubmit(evt) {
       renderCard(newCard, "prepend");
       formElementAddCard.reset();
       closePopup(popupAddNewCard);
+      console.log('Карточка успешно добавлена на сервер')
     })
     .catch((err) => {
       console.log(err);
