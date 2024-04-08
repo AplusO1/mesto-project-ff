@@ -840,6 +840,9 @@ template {
   }
 }
 
+.popup__content_are-you-sure {
+  min-height: 181px;
+}
 .popup__content_content_image {
   max-width: 75vw;
   max-height: 75vh;
