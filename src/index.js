@@ -41,7 +41,7 @@ function handleImageClick(dataCard) {
 }
 
 export function renderCard(item, method = "append") {
-  const cardElement = createCard(item, deleteCard, likeCard, handleImageClick, userId);
+  const cardElement = createCard(item, likeCard, handleImageClick, handleDelete, userId);
   placesList[method](cardElement);
 }
 
@@ -137,6 +137,24 @@ function handleAddCardFormSubmit(evt) {
 
 
 formElementAddCard.addEventListener("submit", handleAddCardFormSubmit);
+
+const popupAreYouSure = document.querySelector(".popup_are-you-sure");
+const cardDeleteButton = popupAreYouSure.querySelector(
+  ".popup__button_delete"
+);
+
+let cardToDelete = null;
+
+function handleDelete (cardElement) {
+  cardToDelete = cardElement;
+  openPopup(popupAreYouSure)
+  cardDeleteButton.addEventListener("click", () => {
+    deleteCard(cardToDelete)
+    closePopup(popupAreYouSure)
+  })
+}
+
+
 
 enableValidation(validationSettings);
 

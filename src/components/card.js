@@ -1,23 +1,12 @@
 import { addLikeCard, removeCard } from "./api";
-import { openPopup, closePopup } from "./modal";
 
-export function createCard(
-  item,
-  deleteCard,
-  likeCard,
-  handleImageClick,
-  userId
-) {
+export function createCard(item, likeCard, handleImageClick, handleDelete, userId) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const likeButton = cardElement.querySelector(".card__like-button");
-  const popupAreYouSure = document.querySelector(".popup_are-you-sure");
-  const cardDeleteButton = popupAreYouSure.querySelector(
-    ".popup__button_delete"
-  );
 
   cardImage.src = item.link;
   cardImage.alt = item.name;
@@ -41,11 +30,7 @@ export function createCard(
   }
 
   deleteButton.addEventListener("click", () => {
-    openPopup(popupAreYouSure);
-    cardDeleteButton.addEventListener("click", () => {
-      deleteCard(cardElement)
-      closePopup(popupAreYouSure)
-    })
+    handleDelete(cardElement);
   });
 
   likeButton.addEventListener("click", () => {
@@ -57,6 +42,17 @@ export function createCard(
   });
 
   return cardElement;
+}
+
+
+// Функция удаления карточки
+export function deleteCard(cardElement) {
+  removeCard(cardElement.dataset.id)
+  .then(() => {
+    cardElement.remove();
+    console.log("Карточка успешно удалена");
+  })
+  .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
 }
 
 export function likeCard(likeButton, cardNode) {
@@ -85,14 +81,4 @@ export function likeCard(likeButton, cardNode) {
       })
       .catch((err) => console.error(`Ошибка: ${err}`));
   }
-}
-
-// Функция удаления карточки
-export function deleteCard(cardElement) {
-  removeCard(cardElement.dataset.id)
-    .then(() => {
-      cardElement.remove();
-      console.log("Карточка успешно удалена");
-    })
-    .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
 }
