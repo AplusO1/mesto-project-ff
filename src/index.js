@@ -143,15 +143,16 @@ const cardDeleteButton = popupAreYouSure.querySelector(
   ".popup__button_delete"
 );
 
-let cardToDelete = null;
+let cardToDelete;
+
+cardDeleteButton.addEventListener("click", () => {
+  deleteCard(cardToDelete)
+  closePopup(popupAreYouSure)
+})
 
 function handleDelete (cardElement) {
   cardToDelete = cardElement;
   openPopup(popupAreYouSure)
-  cardDeleteButton.addEventListener("click", () => {
-    deleteCard(cardToDelete)
-    closePopup(popupAreYouSure)
-  })
 }
 
 
