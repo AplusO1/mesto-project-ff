@@ -88,23 +88,3 @@ export const updateAvatar = (data) => {
   })
   .then(checkResponse)
 };
-
-
-// fetch(`${config.baseUrl}/cards`, { 
-//   headers: config.headers 
-// }) 
-// .then(res => { 
-//   if (res.ok) { 
-//     return res.json(); 
-//   } 
-//   throw new Error(`Ошибка при загрузке карточек: ${res.status}`); 
-// }) 
-// .then((cards) => { 
-//   // Перебираем полученные карточки и рендерим каждую 
-//   cards.forEach((cardData) => { 
-//     console.log(cardData); 
-//   }); 
-// }) 
-// .catch((error) => { 
-//   console.error('Ошибка при загрузке карточек:', error); 
-// });
